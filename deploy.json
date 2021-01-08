@@ -7,33 +7,28 @@
   "functions": [],
   "resources": [
     {
+      {
       "type": "Microsoft.Resources/deploymentScripts",
       "apiVersion": "2019-10-01-preview",
-      "name": "myFirstDeploymentScript",
+      "name": "[variables('cliResourceName')]",
       "location": "[resourceGroup().location]",
-      "kind": "AzurePowerShell",
+      "kind": "AzureCLI",
       "identity": {
         "type": "UserAssigned",
         "userAssignedIdentities": {
-          "/subscriptions/01234567-89AB-CDEF-0123-456789ABCDEF/resourcegroups/deploymenttest/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myscriptingid": {}
+          "[parameters('identity')]": {
+          }
         }
       },
       "properties": {
-        "azPowerShellVersion": "3.0",
-        "scriptContent": "
-                $output = 'Hello Learner!'
-                Write-Output $output
-                $DeploymentScriptOutputs = @{}
-                $DeploymentScriptOutputs['text'] = $output
-             ",
+        "forceUpdateTag": "[parameters('utcValue')]",
+        "AzCliVersion": "2.0.80",
+        "timeout": "PT30M",
+        "arguments": "[variables('cliArg')]",
+        "scriptContent": "appInfo=$(az ad app create --display-name $1 --identifier-uris \"$2\" --reply-urls \"$3\") echo $appInfo > $AZ_SCRIPTS_OUTPUT_PATH",
+        "cleanupPreference": "OnSuccess",
         "retentionInterval": "P1D"
       }
     }
-  ],
-  "outputs": {
-    "scriptResult": {
-      "type": "string",
-      "value": "[reference('myFirstDeploymentScript').outputs.text]"
-    }
-  }
+  ]
 }
