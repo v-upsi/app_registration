@@ -29,7 +29,7 @@
       },
       "properties":
 	  {
-        "forceUpdateTag": "[parameters('utcValue')]",
+        "forceUpdateTag": "v.1.0",
         "AzCliVersion": "2.0.80",
         "timeout": "PT30M",
         "arguments": "[variables('cliArg')]",
@@ -41,10 +41,10 @@
     {
 		  "type": "Microsoft.Web/sites/config",
 		  "apiVersion": "2018-11-01",
-		  "name": "[concat(parameters('appName'), '/appsettings')]",
+		  "name": "[concat(variables('appName'), '/appsettings')]",
 		  "location": "[resourceGroup().location]",
 		  "dependsOn": [
-			"[resourceId('Microsoft.Web/sites', parameters('appName'))]",
+			"[resourceId('Microsoft.Web/sites', variables('appName'))]",
 			"[resourceId('Microsoft.Resources/deploymentScripts', variables('cliResourceName'))]"
 		  ],
 		  "properties": {
