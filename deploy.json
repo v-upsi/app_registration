@@ -12,21 +12,22 @@
   },
   "functions": [],
   "resources": [
-    {
       {
       "type": "Microsoft.Resources/deploymentScripts",
       "apiVersion": "2019-10-01-preview",
       "name": "[variables('cliResourceName')]",
       "location": "[resourceGroup().location]",
       "kind": "AzureCLI",
-      "identity": {
+      "identity": 
+	  {
         "type": "UserAssigned",
         "userAssignedIdentities": {
           "[parameters('identity')]": {
           }
         }
       },
-      "properties": {
+      "properties":
+	  {
         "forceUpdateTag": "[parameters('utcValue')]",
         "AzCliVersion": "2.0.80",
         "timeout": "PT30M",
@@ -34,20 +35,20 @@
         "scriptContent": "appInfo=$(az ad app create --display-name $1 --identifier-uris \"$2\" --reply-urls \"$3\") echo $appInfo > $AZ_SCRIPTS_OUTPUT_PATH",
         "cleanupPreference": "OnSuccess",
         "retentionInterval": "P1D"
-      },
-      {
-      "type": "Microsoft.Web/sites/config",
-      "apiVersion": "2018-11-01",
-      "name": "[concat(parameters('appName'), '/appsettings')]",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', parameters('appName'))]",
-        "[resourceId('Microsoft.Resources/deploymentScripts', variables('cliResourceName'))]"
-      ],
-      "properties": {
-        "applicationId": "[reference(variables('cliResourceName')).outputs.appId]"
       }
-    }
-    }
+	},
+    {
+		  "type": "Microsoft.Web/sites/config",
+		  "apiVersion": "2018-11-01",
+		  "name": "[concat(parameters('appName'), '/appsettings')]",
+		  "location": "[resourceGroup().location]",
+		  "dependsOn": [
+			"[resourceId('Microsoft.Web/sites', parameters('appName'))]",
+			"[resourceId('Microsoft.Resources/deploymentScripts', variables('cliResourceName'))]"
+		  ],
+		  "properties": {
+			"applicationId": "[reference(variables('cliResourceName')).outputs.appId]"
+		  }
+	}
   ]
 }
