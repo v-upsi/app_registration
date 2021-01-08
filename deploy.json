@@ -5,6 +5,7 @@
   "parameters": {},
   "variables": {
     "cliResourceName": "AzCLIAppRegDeploymentScript",
+     "appName":"testdurin",
     "appServicePlanName": "[concat('Plan-', parameters('appName'))]",
     "aadAppUri": "[concat('https://', parameters('appName'), 'azurewebsites.net')]",
     "aadAppRedirectUri": "[concat('https://', parameters('appName'), 'azurewebsites.net/signin-oidc')]",
