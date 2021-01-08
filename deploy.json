@@ -3,7 +3,13 @@
   "contentVersion": "1.0.0.1",
   "apiProfile": "",
   "parameters": {},
-  "variables": {},
+  "variables": {
+    "cliResourceName": "AzCLIAppRegDeploymentScript",
+    "appServicePlanName": "[concat('Plan-', parameters('appName'))]",
+    "aadAppUri": "[concat('https://', parameters('appName'), 'azurewebsites.net')]",
+    "aadAppRedirectUri": "[concat('https://', parameters('appName'), 'azurewebsites.net/signin-oidc')]",
+    "cliArg": "[concat(parameters('appName'), ' ', variables('aadAppUri'), ' ', variables('aadAppRedirectUri'))]"
+  },
   "functions": [],
   "resources": [
     {
@@ -28,7 +34,20 @@
         "scriptContent": "appInfo=$(az ad app create --display-name $1 --identifier-uris \"$2\" --reply-urls \"$3\") echo $appInfo > $AZ_SCRIPTS_OUTPUT_PATH",
         "cleanupPreference": "OnSuccess",
         "retentionInterval": "P1D"
+      },
+      {
+      "type": "Microsoft.Web/sites/config",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(parameters('appName'), '/appsettings')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('appName'))]",
+        "[resourceId('Microsoft.Resources/deploymentScripts', variables('cliResourceName'))]"
+      ],
+      "properties": {
+        "applicationId": "[reference(variables('cliResourceName')).outputs.appId]"
       }
+    }
     }
   ]
 }
