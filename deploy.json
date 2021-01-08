@@ -23,7 +23,7 @@
 	  {
         "type": "UserAssigned",
         "userAssignedIdentities": {
-          "[parameters('identity')]": {
+          "40224cb1-88a7-45d7-a77b-ffd79f118cb8": {
           }
         }
       },
